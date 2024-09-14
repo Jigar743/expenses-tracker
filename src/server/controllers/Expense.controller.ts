@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 const getAllExpenses = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const expenses = await prisma.expenses.findMany();
-    res.status(200).json({ Expenses: expenses });
+    res.status(200).json({ expenses });
   } catch (error) {
     res.status(500).json({ error: "Error while retrieving expenses" });
   }
@@ -35,4 +35,10 @@ const deleteExpense = async (req: NextApiRequest, res: NextApiResponse) => {};
 
 const getExpense = async (req: NextApiRequest, res: NextApiResponse) => {};
 
-export { getAllExpenses, createExpense, updateExpense, deleteExpense, getExpense };
+export {
+  getAllExpenses,
+  createExpense,
+  updateExpense,
+  deleteExpense,
+  getExpense,
+};
