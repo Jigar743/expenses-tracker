@@ -7,7 +7,7 @@ export default function Navbar() {
   return (
     <header className="h-20 shadow-md w-full">
       <div className="container mx-aut h-full flex justify-between items-center">
-        <span className="text-4xl">Expeneses</span>
+        <span className="text-4xl cursor-pointer">Expeneses</span>
         <div className="flex gap-2">
           <Button
             onClick={() =>

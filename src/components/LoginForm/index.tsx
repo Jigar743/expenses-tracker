@@ -38,7 +38,7 @@ export default function LoginForm() {
         <h1 className="text-center text-4xl">Log In Form</h1>
       </div>
       <p className="text-center text-xl">
-        Don't have Account ?{" "}
+        Don&apos;t have Account ?{" "}
         <Link className="text-blue-700" href={"/auth/signup"}>
           Sign Up
         </Link>
