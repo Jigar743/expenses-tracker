@@ -15,6 +15,7 @@ import { PopoverTrigger } from "@radix-ui/react-popover";
 import { Button } from "../ui/button";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "../ui/calendar";
+import { apiConstants } from "@/lib/contants";
 
 interface FormData {
   category: number | string;
@@ -57,11 +58,30 @@ export default function AddExpenseForm({
     }));
   };
 
-  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log(formData);
     // e.currentTarget.reset();
-    resetForm();
+
+    try {
+      const response = await fetch(apiConstants.addExpense, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...formData,
+          date: formData.date?.toISOString(),
+          category: Number(formData.category),
+          amount: parseFloat(formData.amount.toString()),
+        }),
+      });
+      const data = await response.json();
+      console.log(data);
+      resetForm();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -80,10 +100,11 @@ export default function AddExpenseForm({
           <SelectContent>
             {categoryList.map((category) => (
               <SelectItem
+                className="cursor-pointer border rounded py-2 my-2"
                 key={category.id.toString()}
                 value={category.id.toString()}
               >
-                {category.name} - {category.description}
+                <strong>{category.name}</strong> ({category.description})
               </SelectItem>
             ))}
           </SelectContent>
