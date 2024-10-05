@@ -39,7 +39,6 @@ export default function ExpensesList({
 }: {
   expensesList: Expenses;
 }) {
-  console.log(expensesList);
   //   const getCategoryColor = (categoryName) => {};
 
   //   const getCategoryIcon = (categoryName) => {};

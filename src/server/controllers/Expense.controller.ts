@@ -10,7 +10,6 @@ const getAllExpenses = async (req: NextApiRequest, res: NextApiResponse) => {
         category: true,
       },
     });
-    console.log(expenses);
     res.status(200).json({ expenses });
   } catch (error) {
     res.status(500).json({ error: "Error while retrieving expenses" });

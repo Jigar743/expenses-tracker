@@ -60,7 +60,6 @@ export default function AddExpenseForm({
 
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(formData);
     // e.currentTarget.reset();
 
     try {

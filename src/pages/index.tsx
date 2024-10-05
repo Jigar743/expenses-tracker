@@ -20,8 +20,6 @@ export default function Home({
   isError: boolean;
   categoryList: Categories;
 }) {
-  console.log({ categoryList, expensesList, isError });
-
   const [openFilters, setOpenFilters] = useState(false);
   const [isAllCategorySelected, setIsAllCategorySelected] = useState(false);
   const [filters, setFilters] = useState<Array<number>>([]);

@@ -4,6 +4,7 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import { useAuth } from "@/hooks/useAuth";
 
 type FormDataTypes = {
   email: string;
@@ -16,6 +17,8 @@ export default function LoginForm() {
     password: "",
   });
 
+  const { login } = useAuth();
+
   const handleFormDataChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prevFormData) => ({
@@ -27,6 +30,11 @@ export default function LoginForm() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log(formData);
+    login(formData.email, formData.password);
+    setFormData({
+      email: "",
+      password: "",
+    });
   };
 
   return (
@@ -65,7 +73,7 @@ export default function LoginForm() {
           className="w-[70%] text-xl py-6"
           id="password"
           placeholder="Enter your password"
-          type="text"
+          type="password"
           name="password"
           value={formData.password}
           onChange={handleFormDataChange}

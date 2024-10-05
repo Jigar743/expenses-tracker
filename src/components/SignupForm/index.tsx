@@ -4,6 +4,7 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import { useAuth } from "@/hooks/useAuth";
 
 type FormDataTypes = {
   name: string;
@@ -20,6 +21,8 @@ export default function SignupForm() {
     confirmPassword: "",
   });
 
+  const { signup } = useAuth();
+
   const handleFormDataChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prevFormData) => ({
@@ -28,9 +31,15 @@ export default function SignupForm() {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(formData);
+    signup(formData.name, formData.email, formData.password);
+    setFormData({
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    });
   };
 
   return (
