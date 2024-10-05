@@ -13,6 +13,26 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id         Int      @id @default(autoincrement())
+  email      String   @unique
+  name       String
+  password   String
+  created_at DateTime @default(now()) @map("created_at")
+  isVerified Boolean  @default(false)
+
+  // Relations
+  expenses Expenses[] // Assuming a User has multiple Expenses
+}
+
+model OTP {
+  id        Int      @id @default(autoincrement())
+  email     String
+  otp       String
+  expiry    DateTime
+  createdAt DateTime @default(now())
+}
+
 model Categories {
   id          Int      @id @default(autoincrement())
   name        String   @unique
@@ -20,7 +40,7 @@ model Categories {
   created_at  DateTime @default(now()) @map("created_at")
 
   // Relations
-  expenses    Expenses[] // Assuming a Category has multiple Expenses
+  expenses Expenses[] // Assuming a Category has multiple Expenses
 }
 
 model Expenses {
@@ -30,9 +50,12 @@ model Expenses {
   title       String?
   date        DateTime
   created_at  DateTime @default(now()) @map("created_at")
+  user_id     Int
 
   // Relations
-  category    Categories @relation(fields: [category_id], references: [id])
+  category Categories @relation(fields: [category_id], references: [id])
+  user     User       @relation(fields: [user_id], references: [id])
 
   @@index([category_id])
+  @@index([user_id])
 }

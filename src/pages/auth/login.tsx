@@ -1,3 +1,4 @@
+import LoginForm from "@/components/LoginForm";
 import Head from "next/head";
 import React from "react";
 
@@ -7,7 +8,9 @@ export default function LoginPage() {
       <Head>
         <title>Expenses Tracker | Login</title>
       </Head>
-      <div>Login Page</div>
+      <>
+        <LoginForm />
+      </>
     </>
   );
 }
