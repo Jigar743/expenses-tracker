@@ -122,7 +122,7 @@ export default function Home({
         <div className="mb-2 font-semibold bg-blue-400 p-4 text-white rounded text-2xl flex flex-row justify-between">
           <span>Total Expense: </span>
           <span>
-            ₹{expensesList.reduce((acc, expense) => acc + expense.amount, 0)}
+            ₹{expensesList?.reduce((acc, expense) => acc + expense.amount, 0)}
           </span>
         </div>
       </div>

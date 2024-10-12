@@ -72,8 +72,8 @@ export default function ExpensesList({
 
   return (
     <div className="flex flex-col gap-2 ">
-      {expensesList.length > 0 &&
-        expensesList.map((expense) => (
+      {expensesList?.length > 0 &&
+        expensesList?.map((expense) => (
           <Card
             key={expense.id}
             className="overflow-hidden transition-all hover:shadow-xl hover:-translate-y-1"
