@@ -15,6 +15,7 @@ function handler(req: CustomNextApiRequest, res: NextApiResponse) {
   } else {
     res.setHeader("Allow", ["GET", "POST"]);
     res.status(405).end(`Method ${method} Not Allowed`);
+    return Promise.resolve();
   }
 }
 

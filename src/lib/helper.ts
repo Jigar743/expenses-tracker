@@ -7,7 +7,10 @@ export interface CustomNextApiRequest extends NextApiRequest {
 }
 
 export const ApplyMiddleware =
-  (callBack) => async (req: CustomNextApiRequest, res: NextApiResponse) => {
+  (
+    callBack: (req: CustomNextApiRequest, res: NextApiResponse) => Promise<void>
+  ) =>
+  async (req: CustomNextApiRequest, res: NextApiResponse) => {
     try {
       const token = req.headers.authorization?.toString();
 
