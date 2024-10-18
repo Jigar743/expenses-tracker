@@ -38,17 +38,6 @@ export default async function handler(
         },
       });
 
-      // const otp = crypto.randomInt(100000, 999999).toString();
-      // const otpExpiry = new Date(Date.now() + 10 * 60 * 1000);
-
-      // await prisma.oTP.create({
-      //   data: {
-      //     email,
-      //     otp,
-      //     expiry: otpExpiry,
-      //   },
-      // });
-
       const token = generateToken(user.id);
 
       res

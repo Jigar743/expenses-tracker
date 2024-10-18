@@ -1,11 +1,12 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import { ApplyMiddleware, CustomNextApiRequest } from "@/lib/helper";
 import {
   createExpense,
   getAllExpenses,
 } from "@/server/controllers/Expense.controller";
 import type { NextApiRequest, NextApiResponse } from "next";
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
+function handler(req: CustomNextApiRequest, res: NextApiResponse) {
   const { method } = req;
   if (method === "GET") {
     return getAllExpenses(req, res);
@@ -14,5 +15,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   } else {
     res.setHeader("Allow", ["GET", "POST"]);
     res.status(405).end(`Method ${method} Not Allowed`);
+    return Promise.resolve();
   }
 }
+
+export default ApplyMiddleware(handler);

@@ -1,12 +1,12 @@
 import AddExpenseModal from "@/components/AddExpenseModel";
 import ExpensesList from "@/components/ExpensesList";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { apiConstants } from "@/lib/contants";
 import { Categories, Expenses } from "@/types/epenses.types";
 import { FilterIcon } from "lucide-react";
 import { Inter } from "next/font/google";
 import Head from "next/head";
+import { NextRequest } from "next/server";
 import { useState } from "react";
 
 const inter = Inter({ subsets: ["cyrillic"] });
@@ -130,13 +130,19 @@ export default function Home({
   );
 }
 
-export async function getServerSideProps() {
+export async function getServerSideProps({ req }: { req: NextRequest }) {
+  const token = req.cookies?.token;
+
   let categoryList: Categories = [];
   let expensesList: Expenses = [];
   let isError = false;
 
   try {
-    const response = await fetch(apiConstants.getCategories);
+    const response = await fetch(apiConstants.getCategories, {
+      headers: {
+        Authorization: token,
+      },
+    });
     const data = await response.json();
     categoryList = data.categories;
   } catch (error) {
@@ -145,7 +151,11 @@ export async function getServerSideProps() {
   }
 
   try {
-    const response = await fetch(apiConstants.getExpenses);
+    const response = await fetch(apiConstants.getExpenses, {
+      headers: {
+        Authorization: token,
+      },
+    });
     const data = await response.json();
     expensesList = data.expenses;
   } catch (error) {
