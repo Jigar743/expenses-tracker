@@ -6,7 +6,7 @@ export default function OtpVerificationPage() {
   return (
     <>
       <Head>
-        <title>Expenses Tracker | OTP-Verification</title>
+        <title>Expenses Tracker | OTP Verification</title>
       </Head>
       <>
         <OtpVerificationForm />

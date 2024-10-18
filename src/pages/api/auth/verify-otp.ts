@@ -1,37 +1,13 @@
-import { PrismaClient } from "@prisma/client";
-import { NextApiRequest, NextApiResponse } from "next";
-
-const prisma = new PrismaClient();
+import { CustomNextApiRequest } from "@/lib/helper";
+import { verifyOTP } from "@/server/controllers/OTP.controller";
+import { NextApiResponse } from "next";
 
 export default async function handler(
-  req: NextApiRequest,
+  req: CustomNextApiRequest,
   res: NextApiResponse
 ) {
   if (req.method === "POST") {
-    try {
-      const { email, otp } = req.body;
-
-      const otpEntry = await prisma.oTP.findFirst({ where: { email } });
-
-      if (!otpEntry) {
-        return res.status(400).json({ message: "No OTP found for this email" });
-      }
-
-      if (otpEntry.otp !== otp || new Date() > otpEntry.expiry) {
-        return res.status(400).json({ message: "Invalid or expired OTP" });
-      }
-
-      await prisma.oTP.delete({ where: { id: otpEntry.id } });
-
-      await prisma.user.update({
-        where: { email },
-        data: { isVerified: true },
-      });
-
-      return res.status(200).json({ message: "OTP verified successfully" });
-    } catch (error) {
-      return res.status(500).json({ message: "Something went wrong", error });
-    }
+    return verifyOTP(req, res);
   } else {
     res.setHeader("Allow", ["POST"]);
     res.status(405).end(`Method ${req.method} Not Allowed`);
