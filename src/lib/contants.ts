@@ -8,5 +8,6 @@ export const apiConstants = {
   userSignup: `${apiUrl}/auth/signup`,
   userLogin: `${apiUrl}/auth/login`,
   userOtpVerification: `${apiUrl}/auth/verify-otp`,
-  getCurrentUser: `${apiUrl}/user/current-user`
+  userGenerateOtp: `${apiUrl}/auth/send-otp`,
+  getCurrentUser: `${apiUrl}/user/current-user`,
 };

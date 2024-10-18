@@ -8,7 +8,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { Value } from "@radix-ui/react-select";
 import { Input } from "../ui/input";
 import { Popover, PopoverContent } from "../ui/popover";
 import { PopoverTrigger } from "@radix-ui/react-popover";
@@ -16,6 +15,7 @@ import { Button } from "../ui/button";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "../ui/calendar";
 import { apiConstants } from "@/lib/contants";
+import Cookies from "js-cookie";
 
 interface FormData {
   category: number | string;
@@ -63,11 +63,14 @@ export default function AddExpenseForm({
     // e.currentTarget.reset();
 
     try {
+      const token = Cookies.get("token");
+
       const response = await fetch(apiConstants.addExpense, {
         method: "POST",
-        headers: {
+        headers: new Headers({
           "Content-Type": "application/json",
-        },
+          Authorization: token || "",
+        }),
         body: JSON.stringify({
           ...formData,
           date: formData.date?.toISOString(),
@@ -76,7 +79,6 @@ export default function AddExpenseForm({
         }),
       });
       const data = await response.json();
-      console.log(data);
       resetForm();
     } catch (error) {
       console.log(error);

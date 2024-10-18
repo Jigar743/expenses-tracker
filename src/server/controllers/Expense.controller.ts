@@ -1,11 +1,18 @@
+import { CustomNextApiRequest } from "@/lib/helper";
 import { PrismaClient } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 
 const prisma = new PrismaClient();
 
-const getAllExpenses = async (req: NextApiRequest, res: NextApiResponse) => {
+const getAllExpenses = async (
+  req: CustomNextApiRequest,
+  res: NextApiResponse
+) => {
   try {
     const expenses = await prisma.expenses.findMany({
+      where: {
+        user_id: req.userId,
+      },
       include: {
         category: true,
       },
@@ -16,7 +23,10 @@ const getAllExpenses = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-const createExpense = async (req: NextApiRequest, res: NextApiResponse) => {
+const createExpense = async (
+  req: CustomNextApiRequest,
+  res: NextApiResponse
+) => {
   try {
     const { amount, title, category, date } = req.body;
     const expense = await prisma.expenses.create({
@@ -25,6 +35,7 @@ const createExpense = async (req: NextApiRequest, res: NextApiResponse) => {
         title,
         category_id: category,
         date,
+        user_id: req.userId,
       },
     });
     res.status(201).json({ Expense: expense });
