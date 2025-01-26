@@ -8,8 +8,20 @@ import { Inter } from "next/font/google";
 import Head from "next/head";
 import { NextRequest } from "next/server";
 import { useState } from "react";
+// import { GetServerSideProps } from "next";
+// import { useTypesSelector, wrapper } from "@/store";
+// import { fetchExpenses } from "@/store/actions/Expenses.actions";
 
 const inter = Inter({ subsets: ["cyrillic"] });
+
+// export const getServerSideProps: GetServerSideProps =
+//   wrapper.getServerSideProps((store) => async ({ req }) => {
+//     await store.dispatch(fetchExpenses(req as NextRequest));
+
+//     return {
+//       props: {},
+//     };
+//   });
 
 export default function Home({
   expensesList,
@@ -23,6 +35,9 @@ export default function Home({
   const [openFilters, setOpenFilters] = useState(false);
   const [isAllCategorySelected, setIsAllCategorySelected] = useState(false);
   const [filters, setFilters] = useState<Array<number>>([]);
+
+  // const expenses = useTypesSelector((state) => state.expenses.expenses);
+  // console.log(expenses);
 
   const retryClick = () => {
     window.location.reload();
@@ -54,8 +69,6 @@ export default function Home({
       </div>
     );
   }
-
-  console.log(filters.length === 0 && !isAllCategorySelected);
 
   return (
     <>

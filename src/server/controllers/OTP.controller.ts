@@ -13,7 +13,7 @@ export async function verifyOTP(
   try {
     const { email, otp } = req.body;
 
-    const otpEntry = await prisma.oTP.findFirst({ where: { email } });
+    const otpEntry = await prisma.oTP.findFirst({ where: { email, otp } });
 
     if (!otpEntry) {
       return res.status(400).json({ message: "No OTP found for this email" });

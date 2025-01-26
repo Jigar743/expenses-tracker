@@ -29,7 +29,6 @@ export default function LoginForm() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(formData);
     login(formData.email, formData.password);
     setFormData({
       email: "",
@@ -51,7 +50,7 @@ export default function LoginForm() {
           Sign Up
         </Link>
       </p>
-      <FormItem className="flex  gap-3 items-center">
+      <FormItem className="flex gap-3 items-center">
         <Label className="w-[30%] text-xl text-end" htmlFor="email">
           Enter Email:
         </Label>
