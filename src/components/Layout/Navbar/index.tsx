@@ -17,8 +17,6 @@ export default function Navbar() {
 
   const { isAuthenticated, user, logout } = useAuth();
 
-  console.log({ isAuthenticated, user });
-
   return (
     <header className="h-20 shadow-md w-full">
       <div className="container mx-aut h-full flex justify-between items-center">

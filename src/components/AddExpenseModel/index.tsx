@@ -1,5 +1,5 @@
 import { Categories, Expenses } from "@/types/epenses.types";
-import React, { useState } from "react";
+import React from "react";
 import {
   Dialog,
   DialogContent,
@@ -9,19 +9,21 @@ import {
   DialogTrigger,
 } from "../ui/dialog";
 import { Button } from "../ui/button";
-import { Select, SelectContent } from "../ui/select";
-import { SelectItem, SelectTrigger, SelectValue } from "@radix-ui/react-select";
 import AddExpenseForm from "../AddExpenseForm";
 
 export default function AddExpenseModal({
-  expensesList,
   categoryList,
 }: {
-  expensesList: Expenses;
   categoryList: Categories;
 }) {
+  const [modalOpen, setModalOpen] = React.useState(false);
+
+  const handleModalChange = () => {
+    setModalOpen(!modalOpen);
+  };
+
   return (
-    <Dialog>
+    <Dialog open={modalOpen} onOpenChange={handleModalChange}>
       <DialogTrigger asChild>
         <Button variant={"outline"}>Add Expense</Button>
       </DialogTrigger>
@@ -30,7 +32,7 @@ export default function AddExpenseModal({
           <DialogTitle>Add Expense</DialogTitle>
           <DialogDescription>Fill out your Expense</DialogDescription>
         </DialogHeader>
-        <AddExpenseForm categoryList={categoryList} />
+        <AddExpenseForm categoryList={categoryList} onClose={handleModalChange} />
       </DialogContent>
     </Dialog>
   );

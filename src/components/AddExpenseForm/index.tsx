@@ -26,8 +26,10 @@ interface FormData {
 
 export default function AddExpenseForm({
   categoryList,
+  onClose,
 }: {
   categoryList: Categories;
+  onClose: () => void;
 }) {
   const [formData, setFormData] = useState<FormData>({
     category: "",
@@ -35,8 +37,6 @@ export default function AddExpenseForm({
     title: "",
     date: null,
   });
-
-  const [errors, setErrors] = useState({});
 
   const resetForm = () => {
     setFormData({
@@ -79,7 +79,10 @@ export default function AddExpenseForm({
         }),
       });
       const data = await response.json();
-      resetForm();
+      if (response.ok) {
+        onClose();
+        resetForm();
+      }
     } catch (error) {
       console.log(error);
     }
