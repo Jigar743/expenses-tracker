@@ -15,33 +15,31 @@ export default function AuthProvider({
   const [isLoading, setLoading] = React.useState(false);
   const router = useRouter();
 
-  useEffect(() => {
-    (async () => {
-      setLoading(true);
-      console.log({ path: router.pathname });
-      try {
-        const token = Cookies.get("token");
-        console.log({ token });
-        if (token) {
-          const response = await fetch(apiConstants.getCurrentUser, {
-            method: "GET",
-            headers: {
-              Authorization: token,
-            },
-          });
-          if (response.ok) {
-            const data = await response.json();
-            setUser(data.user);
-            console.log({ data });
-          }
+  const fetchCurrentUser = async () => {
+    try {
+      const token = Cookies.get("token");
+      if (token) {
+        setLoading(true);
+        const response = await fetch(apiConstants.getCurrentUser, {
+          method: "GET",
+          headers: {
+            Authorization: token,
+          },
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setUser(data.user);
         }
-      } catch (error) {
-        logout();
-        console.error({ error });
       }
+    } catch (error) {
+      logout();
+    } finally {
       setLoading(false);
-    })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }
+  };
+
+  useEffect(() => {
+    fetchCurrentUser();
   }, [router]);
 
   const signup = async (name: string, email: string, password: string) => {
@@ -84,6 +82,8 @@ export default function AuthProvider({
     }
   };
 
+  const resetPassword = async (email: string) => {};
+
   const logout = () => {
     Cookies.remove("token");
     localStorage.removeItem("token");
@@ -98,6 +98,7 @@ export default function AuthProvider({
     signup,
     login,
     logout,
+    resetPassword,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

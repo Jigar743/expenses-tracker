@@ -5,6 +5,7 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { useAuth } from "@/hooks/useAuth";
+import { EyeIcon, EyeOffIcon } from "lucide-react";
 
 type FormDataTypes = {
   email: string;
@@ -12,6 +13,7 @@ type FormDataTypes = {
 };
 
 export default function LoginForm() {
+  const [newPasswordEyeToggle, setNewPasswordEyeToggle] = useState(false);
   const [formData, setFormData] = useState<FormDataTypes>({
     email: "",
     password: "",
@@ -29,7 +31,6 @@ export default function LoginForm() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(formData);
     login(formData.email, formData.password);
     setFormData({
       email: "",
@@ -43,15 +44,9 @@ export default function LoginForm() {
       className="space-y-4 w-[50%] h-[80%] m-auto border p-4 rounded shadow-lg"
     >
       <div className="p-4 border-b-2">
-        <h1 className="text-center text-4xl">Log In Form</h1>
+        <h1 className="text-center text-4xl">Log In</h1>
       </div>
-      <p className="text-center text-xl">
-        Don&apos;t have Account ?{" "}
-        <Link className="text-blue-700" href={"/auth/signup"}>
-          Sign Up
-        </Link>
-      </p>
-      <FormItem className="flex  gap-3 items-center">
+      <FormItem className="flex gap-3 items-center">
         <Label className="w-[30%] text-xl text-end" htmlFor="email">
           Enter Email:
         </Label>
@@ -69,15 +64,32 @@ export default function LoginForm() {
         <Label className="w-[30%] text-xl text-end" htmlFor="password">
           Enter Password:
         </Label>
-        <Input
-          className="w-[70%] text-xl py-6"
-          id="password"
-          placeholder="Enter your password"
-          type="password"
-          name="password"
-          value={formData.password}
-          onChange={handleFormDataChange}
-        />
+        <div className="w-[70%] relative flex items-center">
+          <Input
+            placeholder="Enter your password"
+            className="text-xl py-6"
+            id="password"
+            type={newPasswordEyeToggle ? "text" : "password"}
+            name="password"
+            value={formData.password}
+            onChange={(e) =>
+              setFormData({ ...formData, password: e.target.value })
+            }
+          />
+          <span className="absolute inset-y-0 right-4 flex items-center pl-3">
+            {newPasswordEyeToggle ? (
+              <EyeOffIcon
+                onClick={() => setNewPasswordEyeToggle(!newPasswordEyeToggle)}
+                className="text-gray-500 h-5 w-5 cursor-pointer"
+              />
+            ) : (
+              <EyeIcon
+                onClick={() => setNewPasswordEyeToggle(!newPasswordEyeToggle)}
+                className="text-gray-500 h-5 w-5 cursor-pointer"
+              />
+            )}
+          </span>
+        </div>
       </FormItem>
       <div className="text-end">
         <Link className="text-blue-700" href={"/auth/forgot-password"}>
@@ -93,6 +105,12 @@ export default function LoginForm() {
           Log In
         </Button>
       </div>
+      <p className="text-center text-xl">
+        Don&apos;t have Account ?{" "}
+        <Link className="text-blue-700" href={"/auth/signup"}>
+          Sign Up
+        </Link>
+      </p>
     </form>
   );
 }

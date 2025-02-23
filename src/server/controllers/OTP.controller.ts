@@ -13,7 +13,7 @@ export async function verifyOTP(
   try {
     const { email, otp } = req.body;
 
-    const otpEntry = await prisma.oTP.findFirst({ where: { email } });
+    const otpEntry = await prisma.oTP.findFirst({ where: { email, otp } });
 
     if (!otpEntry) {
       return res.status(400).json({ message: "No OTP found for this email" });
@@ -66,8 +66,7 @@ export async function generateOTP(
       to: email,
       subject: "Expenses-Tracker verify you mail",
       html: `<h1>Welcome to Our Service</h1>
-            <p>We are glad to have you!</p>
-            <h2>${otp}</h2>`,
+            <h2>OTP: ${otp}</h2>`,
     };
 
     await transporter.sendMail(mailOptions);
