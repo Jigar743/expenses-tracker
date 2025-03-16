@@ -6,7 +6,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -18,9 +17,14 @@ export default function Navbar() {
   const { isAuthenticated, user, logout } = useAuth();
 
   return (
-    <header className="h-20 shadow-md w-full">
+    <header className="shadow-md w-full h-[10vh]">
       <div className="container mx-aut h-full flex justify-between items-center">
-        <span className="text-4xl cursor-pointer">Expeneses</span>
+        <span
+          className="text-4xl cursor-pointer"
+          onClick={() => router.push("/")}
+        >
+          Expeneses
+        </span>
         {isAuthenticated ? (
           <>
             <DropdownMenu>

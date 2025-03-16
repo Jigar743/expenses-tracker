@@ -21,7 +21,6 @@ export async function middleware(req: NextRequest) {
   }
 
   let user = null,
-    isAuthenticated = false,
     isVerified = false;
 
   try {
@@ -35,7 +34,6 @@ export async function middleware(req: NextRequest) {
         const data = await response.json();
         user = data?.user;
         isVerified = data?.user?.isVerified;
-        isAuthenticated = !!user;
       }
     }
   } catch (error) {

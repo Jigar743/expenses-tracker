@@ -1,9 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { hashPassword } from "@/lib/bcrypt";
-import { sendOTPEmail } from "@/lib/email";
 import { generateToken } from "@/lib/jwt";
 import { PrismaClient } from "@prisma/client";
-import crypto from "crypto";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 const prisma = new PrismaClient();

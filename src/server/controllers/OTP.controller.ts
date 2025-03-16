@@ -42,6 +42,24 @@ export async function generateOTP(
 ) {
   try {
     const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ message: "Email is required" });
+    }
+
+    const existingOTP = await prisma.oTP.findFirst({
+      where: {
+        email,
+        expiry: { gt: new Date() },
+      },
+    });
+
+    if (existingOTP) {
+      return res
+        .status(200)
+        .json({ message: "OTP already sent. Try again later." });
+    }
+
     const otp = crypto.randomInt(100000, 999999).toString();
     const otpExpiry = new Date(Date.now() + 10 * 60 * 1000);
 
@@ -66,7 +84,8 @@ export async function generateOTP(
       to: email,
       subject: "Expenses-Tracker verify you mail",
       html: `<h1>Welcome to Our Service</h1>
-            <h2>OTP: ${otp}</h2>`,
+            <h2>OTP: ${otp}</h2>
+            <p>This OTP will expire in 10 minutes.</p>`,
     };
 
     await transporter.sendMail(mailOptions);

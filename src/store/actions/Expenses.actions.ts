@@ -1,5 +1,4 @@
 import { apiConstants } from "@/lib/contants";
-import expenses from "@/pages/api/expenses";
 import { Dispatch } from "@reduxjs/toolkit";
 import { NextRequest } from "next/server";
 import { addExpense } from "../reducer/Expenses.reducer";

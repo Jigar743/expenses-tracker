@@ -4,24 +4,9 @@ import { Button } from "@/components/ui/button";
 import { apiConstants } from "@/lib/contants";
 import { Categories, Expenses } from "@/types/epenses.types";
 import { FilterIcon } from "lucide-react";
-import { Inter } from "next/font/google";
 import Head from "next/head";
 import { NextRequest } from "next/server";
-import { useState } from "react";
-// import { GetServerSideProps } from "next";
-// import { useTypesSelector, wrapper } from "@/store";
-// import { fetchExpenses } from "@/store/actions/Expenses.actions";
-
-const inter = Inter({ subsets: ["cyrillic"] });
-
-// export const getServerSideProps: GetServerSideProps =
-//   wrapper.getServerSideProps((store) => async ({ req }) => {
-//     await store.dispatch(fetchExpenses(req as NextRequest));
-
-//     return {
-//       props: {},
-//     };
-//   });
+import { useMemo, useState } from "react";
 
 export default function Home({
   expensesList,
@@ -36,15 +21,11 @@ export default function Home({
   const [isAllCategorySelected, setIsAllCategorySelected] = useState(false);
   const [filters, setFilters] = useState<Array<number>>([]);
 
-  // const expenses = useTypesSelector((state) => state.expenses.expenses);
-  // console.log(expenses);
-
   const retryClick = () => {
     window.location.reload();
   };
 
   const addFilterValue = (value: number) => {
-    console.log(value);
     const prevFilters = [...filters];
 
     if (prevFilters.some((val) => val === value)) {
@@ -58,6 +39,10 @@ export default function Home({
   };
 
   const applyFilters = () => {};
+
+  const TotalSum = useMemo(() => {
+    return expensesList.reduce((acc, curr) => acc + curr.amount, 0) || 0;
+  }, [expensesList]);
 
   if (isError) {
     return (
@@ -75,7 +60,7 @@ export default function Home({
       <Head>
         <title>Expenses Tracker | Home</title>
       </Head>
-      <div className="w-[80%] m-auto flex flex-col gap-4">
+      <div className="h-[85vh] m-auto flex flex-col gap-4 sm:w-[100%] md:w-[100%] lg:w-[80%]">
         <div className="mt-2 p-2 rounded border">
           <div className="flex gap-2 justify-end">
             <div
@@ -84,10 +69,7 @@ export default function Home({
             >
               <FilterIcon />
             </div>
-            <AddExpenseModal
-              expensesList={expensesList}
-              categoryList={categoryList}
-            />
+            <AddExpenseModal categoryList={categoryList} />
           </div>
           {openFilters && (
             <div>
@@ -129,14 +111,12 @@ export default function Home({
             </div>
           )}
         </div>
-        <div className="p-2  rounded h-[80vh] overflow-auto scroll-m-0">
+        <div className="p-2 rounded overflow-auto scroll-m-0">
           <ExpensesList expensesList={expensesList} />
         </div>
         <div className="mb-2 font-semibold bg-blue-400 p-4 text-white rounded text-2xl flex flex-row justify-between">
           <span>Total Expense: </span>
-          <span>
-            ₹{expensesList?.reduce((acc, expense) => acc + expense.amount, 0)}
-          </span>
+          <span>₹{TotalSum}</span>
         </div>
       </div>
     </>

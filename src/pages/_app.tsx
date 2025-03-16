@@ -3,8 +3,7 @@ import "@/styles/globals.css";
 import Layout from "@/components/Layout";
 import AuthProvider from "@/providers/AuthProvider";
 import ProtectedRoutes from "@/providers/ProtectedRoutes";
-import { makeStore, wrapper } from "@/store";
-import { Provider } from "react-redux";
+import { wrapper } from "@/store";
 
 function App({ Component, pageProps }: AppProps) {
   return (

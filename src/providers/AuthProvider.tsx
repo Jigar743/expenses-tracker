@@ -16,10 +16,10 @@ export default function AuthProvider({
   const router = useRouter();
 
   const fetchCurrentUser = async () => {
+    setLoading(true);
     try {
       const token = Cookies.get("token");
       if (token) {
-        setLoading(true);
         const response = await fetch(apiConstants.getCurrentUser, {
           method: "GET",
           headers: {
