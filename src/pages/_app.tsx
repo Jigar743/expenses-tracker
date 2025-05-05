@@ -3,8 +3,8 @@ import "@/styles/globals.css";
 import Layout from "@/components/Layout";
 import AuthProvider from "@/providers/AuthProvider";
 import ProtectedRoutes from "@/providers/ProtectedRoutes";
-import { makeStore, wrapper } from "@/store";
-import { Provider } from "react-redux";
+import { wrapper } from "@/store";
+import { Toaster } from "@/components/ui/toaster";
 
 function App({ Component, pageProps }: AppProps) {
   return (
@@ -13,6 +13,7 @@ function App({ Component, pageProps }: AppProps) {
         <ProtectedRoutes>
           <Layout>
             <Component {...pageProps} />
+            <Toaster />
           </Layout>
         </ProtectedRoutes>
       </AuthProvider>

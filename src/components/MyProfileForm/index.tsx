@@ -9,7 +9,7 @@ function MyProfileForm() {
   const { user } = useAuth();
 
   return (
-    <form className="space-y-4 w-[50%] h-[80%] m-auto border p-4 rounded shadow-lg">
+    <form className="space-y-4 h-[80%] m-auto border p-4 rounded shadow-lg sm:w-[100%] md:w-[70%] lg:w-[50%]">
       <div className="p-4 border-b-2">
         <h1 className="text-center text-4xl">My Profile</h1>
       </div>

@@ -3,6 +3,7 @@ import { AuthContextType, User } from "@/types/auth.types";
 import { useRouter } from "next/router";
 import React, { createContext, useEffect } from "react";
 import Cookies from "js-cookie";
+import { useToast } from "@/hooks/use-toast";
 
 export const AuthContext = createContext<AuthContextType | null>(null);
 
@@ -14,12 +15,13 @@ export default function AuthProvider({
   const [user, setUser] = React.useState<User | null>(null);
   const [isLoading, setLoading] = React.useState(false);
   const router = useRouter();
+  const { toast } = useToast();
 
   const fetchCurrentUser = async () => {
+    setLoading(true);
     try {
       const token = Cookies.get("token");
       if (token) {
-        setLoading(true);
         const response = await fetch(apiConstants.getCurrentUser, {
           method: "GET",
           headers: {
@@ -40,6 +42,7 @@ export default function AuthProvider({
 
   useEffect(() => {
     fetchCurrentUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
 
   const signup = async (name: string, email: string, password: string) => {
@@ -56,9 +59,17 @@ export default function AuthProvider({
         setUser(data.user);
         Cookies.set("token", data.token);
         router.push("/");
+        toast({
+          description: "Signup successful",
+          duration: 5000,
+        });
       }
     } catch (error) {
       console.error({ error });
+      toast({
+        description: "Error signing up, Please try again",
+        duration: 5000,
+      });
     }
   };
 
@@ -76,13 +87,21 @@ export default function AuthProvider({
         Cookies.set("token", data.token);
         setUser(data.user);
         router.push("/");
+        toast({
+          description: "Login successful",
+          duration: 5000,
+        });
       }
     } catch (error) {
       console.error({ error });
+      toast({
+        description: "Invalid email or password",
+        duration: 5000,
+      });
     }
   };
 
-  const resetPassword = async (email: string) => {};
+  const resetPassword = async () => {};
 
   const logout = () => {
     Cookies.remove("token");

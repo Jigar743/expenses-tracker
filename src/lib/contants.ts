@@ -10,4 +10,5 @@ export const apiConstants = {
   userOtpVerification: `${apiUrl}/auth/verify-otp`,
   userGenerateOtp: `${apiUrl}/auth/send-otp`,
   getCurrentUser: `${apiUrl}/user/current-user`,
+  changePassword: `${apiUrl}/auth/change-password`,
 };

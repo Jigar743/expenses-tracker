@@ -5,6 +5,8 @@ import { Input } from "../ui/input";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { apiConstants } from "@/lib/contants";
+import Cookies from "js-cookie";
 
 type FormDataTypes = {
   new_password: string;
@@ -23,18 +25,40 @@ function ChangePasswordForm() {
     confirm_password: "",
   });
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    console.log({ formData });
-
     if (formData.new_password !== formData.confirm_password) {
       toast({
-        title: "Scheduled: Catch up",
-        description: "Friday, February 10, 2023 at 5:57 PM",
+        description: "Passwords do not match",
+        duration: 5000,
       });
-    } else {
-      console.log(formData);
+      return;
+    }
+    if (formData.new_password === formData.confirm_password) {
+      try {
+        const token = Cookies.get("token");
+
+        const resposnse = await fetch(apiConstants.changePassword, {
+          method: "POST",
+          headers: new Headers({
+            "Content-Type": "application/json",
+            Authorization: token || "",
+          }),
+
+          body: JSON.stringify({
+            newPassword: formData.new_password,
+          }),
+        });
+        if (resposnse.ok) {
+          const data = await resposnse.json();
+          toast({
+            description: data.message,
+            duration: 5000,
+          });
+        }
+      } catch (error) {
+        console.log({ error });
+      }
       setFormData({
         new_password: "",
         confirm_password: "",
@@ -46,10 +70,10 @@ function ChangePasswordForm() {
     <form
       method="post"
       onSubmit={handleSubmit}
-      className="space-y-4 w-[50%] h-[80%] m-auto border p-4 rounded shadow-lg"
+      className="space-y-4 h-[80%] m-auto border p-4 rounded shadow-lg sm:w-[100%] md:w-[70%] lg:w-[50%]"
     >
       <div className="p-4 border-b-2">
-        <h1 className="text-center text-4xl">My Profile</h1>
+        <h1 className="text-center text-4xl">Change Password</h1>
       </div>
       <FormItem className="flex gap-3 items-center">
         <Label className="w-[30%] text-xl text-end" htmlFor="new-password">

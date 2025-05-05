@@ -10,6 +10,14 @@ export const publicRoutes = [
 
 export const privateRoutes = ["/", "/my-profile", "/change-password"];
 
+export const redirectURL = {
+  otpVerificationPage: "/auth/otp-verification",
+  loginPage: "/auth/login",
+  homePage: "/",
+  myProfilePage: "/my-profile",
+  changePasswordPage: "/change-password",
+};
+
 export async function middleware(req: NextRequest) {
   const token = req.cookies.get("token")?.value || "";
   const { pathname } = req.nextUrl;
@@ -17,11 +25,10 @@ export async function middleware(req: NextRequest) {
   const isPrivateRoute = privateRoutes.includes(pathname);
 
   if (!token && (isPrivateRoute || pathname === "/auth/otp-verification")) {
-    return NextResponse.redirect(new URL("/auth/login", req.url));
+    return NextResponse.redirect(new URL(redirectURL.loginPage, req.url));
   }
 
   let user = null,
-    isAuthenticated = false,
     isVerified = false;
 
   try {
@@ -35,7 +42,6 @@ export async function middleware(req: NextRequest) {
         const data = await response.json();
         user = data?.user;
         isVerified = data?.user?.isVerified;
-        isAuthenticated = !!user;
       }
     }
   } catch (error) {
@@ -48,7 +54,7 @@ export async function middleware(req: NextRequest) {
     if (!isVerified) {
       if (isPrivateRoute) {
         return NextResponse.redirect(
-          new URL("/auth/otp-verification", req.url)
+          new URL(redirectURL.otpVerificationPage, req.url)
         );
       }
 
@@ -59,29 +65,21 @@ export async function middleware(req: NextRequest) {
           pathname === "/auth/forgot-password")
       ) {
         return NextResponse.redirect(
-          new URL("/auth/otp-verification", req.url)
+          new URL(redirectURL.otpVerificationPage, req.url)
         );
       }
     }
 
     if (isPublicRoute && isVerified) {
-      return NextResponse.redirect(new URL("/", req.url));
+      return NextResponse.redirect(new URL(redirectURL.homePage, req.url));
     }
   }
 
   if (!user && isPrivateRoute) {
-    return NextResponse.redirect(new URL("/auth/login", req.url));
+    return NextResponse.redirect(new URL(redirectURL.loginPage, req.url));
   }
 }
 
 export const config = {
-  matcher: [
-    "/auth/login",
-    "/auth/signup",
-    "/auth/otp-verification",
-    "/auth/forgot-password",
-    "/",
-    "/my-profile",
-    "/change-password",
-  ],
+  matcher: ["/auth/:path*", "/", "/my-profile", "/change-password"],
 };

@@ -27,12 +27,15 @@ export default function AddExpenseModal({
       <DialogTrigger asChild>
         <Button variant={"outline"}>Add Expense</Button>
       </DialogTrigger>
-      <DialogContent className="w-[70%]">
+      <DialogContent className="sm:w-[100%] md:w-[70%] lg:w-[70%]">
         <DialogHeader>
           <DialogTitle>Add Expense</DialogTitle>
           <DialogDescription>Fill out your Expense</DialogDescription>
         </DialogHeader>
-        <AddExpenseForm categoryList={categoryList} onClose={handleModalChange} />
+        <AddExpenseForm
+          categoryList={categoryList}
+          onClose={handleModalChange}
+        />
       </DialogContent>
     </Dialog>
   );

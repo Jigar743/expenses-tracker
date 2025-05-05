@@ -39,9 +39,6 @@ export default function ExpensesList({
 }: {
   expensesList: Expenses;
 }) {
-  //   const getCategoryColor = (categoryName) => {};
-
-  //   const getCategoryIcon = (categoryName) => {};
 
   const getCategoryIcon = (
     categoryName: keyof typeof CategoryIcon
@@ -71,7 +68,7 @@ export default function ExpensesList({
   };
 
   return (
-    <div className="flex flex-col gap-2 ">
+    <div className="flex flex-col gap-2">
       {expensesList?.length > 0 &&
         expensesList?.map((expense) => (
           <Card
