@@ -4,7 +4,7 @@ import {
   createExpense,
   getAllExpenses,
 } from "@/server/controllers/Expense.controller";
-import type { NextApiRequest, NextApiResponse } from "next";
+import type { NextApiResponse } from "next";
 
 function handler(req: CustomNextApiRequest, res: NextApiResponse) {
   const { method } = req;

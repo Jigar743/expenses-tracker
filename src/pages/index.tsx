@@ -111,7 +111,7 @@ export default function Home({
             </div>
           )}
         </div>
-        <div className="p-2 rounded overflow-auto scroll-m-0">
+        <div className="p-2 overflow-auto scroll-m-0 border rounded">
           <ExpensesList expensesList={expensesList} />
         </div>
         <div className="mb-2 font-semibold bg-blue-400 p-4 text-white rounded text-2xl flex flex-row justify-between">
