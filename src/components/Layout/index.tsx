@@ -9,20 +9,23 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const { isLoading } = useAuth();
 
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-50">
+        <LoaderCircle className="animate-spin text-blue-600 w-10 h-10" />
+      </div>
+    );
+  }
+
   switch (router.pathname) {
     case "/404":
       return <>{children}</>;
     // we can add more cases here
     default:
       return (
-        <div className="flex flex-col min-h-screen">
+        <div className="flex flex-col min-h-screen bg-gray-50">
           <Navbar />
-          {isLoading && (
-            <div className="text-center">
-              <LoaderCircle className="text-black" />
-            </div>
-          )}
-          {!isLoading && <main className="flex-1 py-4">{children}</main>}
+          <main className="flex-1 container mx-auto">{children}</main>
           <Footer />
         </div>
       );

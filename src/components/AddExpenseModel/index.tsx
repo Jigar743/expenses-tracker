@@ -1,4 +1,4 @@
-import { Categories, Expenses } from "@/types/epenses.types";
+import { Categories } from "@/types/epenses.types";
 import React from "react";
 import {
   Dialog,
@@ -10,6 +10,7 @@ import {
 } from "../ui/dialog";
 import { Button } from "../ui/button";
 import AddExpenseForm from "../AddExpenseForm";
+import { Plus } from "lucide-react";
 
 export default function AddExpenseModal({
   categoryList,
@@ -24,18 +25,33 @@ export default function AddExpenseModal({
 
   return (
     <Dialog open={modalOpen} onOpenChange={handleModalChange}>
+      {/* Trigger Button */}
       <DialogTrigger asChild>
-        <Button variant={"outline"}>Add Expense</Button>
+        <Button className="flex items-center gap-2 bg-gray-800 text-white hover:bg-gray-700 px-5 py-3 rounded-md">
+          <Plus className="w-5 h-5" />
+          Add Expense
+        </Button>
       </DialogTrigger>
-      <DialogContent className="sm:w-[100%] md:w-[70%] lg:w-[70%]">
-        <DialogHeader>
-          <DialogTitle>Add Expense</DialogTitle>
-          <DialogDescription>Fill out your Expense</DialogDescription>
+
+      {/* Modal Content */}
+      <DialogContent className="sm:max-w-md md:max-w-lg lg:max-w-xl rounded-md p-0 bg-white">
+        {/* Header */}
+        <DialogHeader className="p-4">
+          <DialogTitle className="text-xl font-medium text-gray-800">
+            Add Expense
+          </DialogTitle>
+          <DialogDescription className="text-sm text-gray-500 mt-1">
+            Fill out the details below.
+          </DialogDescription>
         </DialogHeader>
-        <AddExpenseForm
-          categoryList={categoryList}
-          onClose={handleModalChange}
-        />
+
+        {/* Form */}
+        <div className="p-4">
+          <AddExpenseForm
+            categoryList={categoryList}
+            onClose={handleModalChange}
+          />
+        </div>
       </DialogContent>
     </Dialog>
   );

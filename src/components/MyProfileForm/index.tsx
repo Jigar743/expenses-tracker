@@ -9,41 +9,45 @@ function MyProfileForm() {
   const { user } = useAuth();
 
   return (
-    <form className="space-y-4 h-[80%] m-auto border p-4 rounded shadow-lg sm:w-[100%] md:w-[70%] lg:w-[50%]">
-      <div className="p-4 border-b-2">
-        <h1 className="text-center text-4xl">My Profile</h1>
+    <form className="max-w-xl w-full mx-auto bg-white rounded-md p-6 space-y-6">
+      {/* Header */}
+      <div className="text-center mb-4">
+        <h1 className="text-3xl font-semibold text-gray-800">My Profile</h1>
+        <p className="text-gray-500 text-sm">View your personal details</p>
       </div>
-      <FormItem className="flex gap-3 items-center">
-        <Label className="w-[30%] text-xl text-end" htmlFor="name">
-          Your Name:
+
+      {/* Name */}
+      <FormItem className="flex flex-col space-y-2">
+        <Label className="text-gray-700 text-sm font-medium" htmlFor="name">
+          Name
         </Label>
-        <div className="w-[70%] relative flex items-center">
-          <Input
-            readOnly
-            className="text-xl py-6"
-            id="name"
-            type="text"
-            name="name"
-            value={user?.name}
-          />
-        </div>
+        <Input
+          readOnly
+          id="name"
+          type="text"
+          name="name"
+          value={user?.name || ""}
+          className="text-gray-800 bg-gray-50 border border-gray-200 rounded-md px-4 py-3 focus:outline-none"
+        />
       </FormItem>
-      <FormItem className="flex gap-3 items-center">
-        <Label className="w-[30%] text-xl text-end" htmlFor="email">
-          Your Email:
+
+      {/* Email */}
+      <FormItem className="flex flex-col space-y-2">
+        <Label className="text-gray-700 text-sm font-medium" htmlFor="email">
+          Email
         </Label>
-        <div className="w-[70%] relative flex items-center">
+        <div className="relative">
           <Input
             readOnly
-            className=" text-xl py-6"
             id="email"
             type="email"
             name="email"
-            value={user?.email}
+            value={user?.email || ""}
+            className="text-gray-800 bg-gray-50 border border-gray-200 rounded-md px-4 py-3 focus:outline-none pr-10"
           />
           {user?.isVerified && (
-            <span className="absolute inset-y-0 right-2 flex items-center pl-3">
-              <VerifiedIcon className="text-green-500 h-5 w-5" />
+            <span className="absolute inset-y-0 right-3 flex items-center">
+              <VerifiedIcon className="text-green-500 w-5 h-5" />
             </span>
           )}
         </div>
