@@ -1,7 +1,5 @@
 import { Expenses } from "@/types/epenses.types";
 import React from "react";
-import { Card, CardContent } from "../ui/card";
-import { Badge } from "../ui/badge";
 import {
   Beef,
   Cable,
@@ -16,22 +14,32 @@ import {
   Milk,
   Pizza,
   ShoppingCart,
+  Edit2,
+  Trash2,
 } from "lucide-react";
-// import exp from "constants";
 
-export const CategoryIcon = {
-  Food: <ShoppingCart />,
-  Transport: <CarFront />,
-  Entertainment: <Clapperboard />,
-  Utilities: <Cable />,
-  Beverages: <CupSoda />,
-  Condiments: <Martini />,
-  Confections: <Cake />,
-  Produce: <Grape />,
-  Seafood: <Fish />,
-  "Dairy Products": <Milk />,
-  "Grains/Cereals": <Pizza />,
-  "Meat/Poultry": <Beef />,
+const CategoryIcon = {
+  Food: <ShoppingCart className="w-4 h-4" />,
+  Transport: <CarFront className="w-4 h-4" />,
+  Entertainment: <Clapperboard className="w-4 h-4" />,
+  Utilities: <Cable className="w-4 h-4" />,
+  Beverages: <CupSoda className="w-4 h-4" />,
+  Condiments: <Martini className="w-4 h-4" />,
+  Confections: <Cake className="w-4 h-4" />,
+  Produce: <Grape className="w-4 h-4" />,
+  Seafood: <Fish className="w-4 h-4" />,
+  "Dairy Products": <Milk className="w-4 h-4" />,
+  "Grains/Cereals": <Pizza className="w-4 h-4" />,
+  "Meat/Poultry": <Beef className="w-4 h-4" />,
+};
+
+const categoryColors: Record<string, string> = {
+  Food: "bg-green-100 text-green-700",
+  Transport: "bg-yellow-100 text-yellow-700",
+  Entertainment: "bg-purple-100 text-purple-700",
+  Utilities: "bg-orange-100 text-orange-700",
+  Beverages: "bg-blue-100 text-blue-700",
+  Default: "bg-gray-100 text-gray-600",
 };
 
 export default function ExpensesList({
@@ -39,69 +47,102 @@ export default function ExpensesList({
 }: {
   expensesList: Expenses;
 }) {
+  const getCategoryIcon = (name: keyof typeof CategoryIcon) =>
+    CategoryIcon[name] || <ShoppingCart className="w-4 h-4" />;
 
-  const getCategoryIcon = (
-    categoryName: keyof typeof CategoryIcon
-  ): React.ReactElement | null => {
-    return CategoryIcon[categoryName];
-  };
+  const getCategoryColor = (name: string) =>
+    categoryColors[name] || categoryColors.Default;
 
   const DisplayDate = ({ date }: { date: Date }) => {
-    const dateObj = new Date(date);
-
+    const d = new Date(date);
     return (
-      <div className="flex items-center bg-primary/10 rounded-full px-4 py-2">
-        <CalendarIcon className="w-5 h-5 mr-2 text-primary" />
-        <div>
-          <div className="text-sm font-semibold">
-            {dateObj.toLocaleDateString("en-US", {
-              month: "short",
-              day: "numeric",
-            })}
-          </div>
-          <div className="text-xs text-muted-foreground">
-            {dateObj.getFullYear()}
-          </div>
-        </div>
+      <div className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-full bg-gray-50 text-gray-500">
+        <CalendarIcon className="w-3 h-3" />
+        {d.toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+        })}
       </div>
     );
   };
 
   return (
-    <div className="flex flex-col gap-2">
-      {expensesList?.length > 0 &&
-        expensesList?.map((expense) => (
-          <Card
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      {expensesList?.length > 0 ? (
+        expensesList.map((expense) => (
+          <div
             key={expense.id}
-            className="overflow-hidden transition-all hover:shadow-xl hover:-translate-y-1"
+            className="relative group bg-white rounded-lg border border-gray-200 p-4 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-200 flex flex-col gap-4"
           >
-            <CardContent className="p-0">
-              <div className="flex items-stretch">
-                <div className="flex-grow p-4">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-2xl font-bold text-gray-900">
-                      {expense.title}
-                    </h3>
+            {/* Edit/Delete Buttons - Hidden until hover */}
+            <div className="absolute -top-3 -right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+              <button
+                onClick={() => console.log(`Edit expense ${expense.id}`)}
+                className="bg-gray-100 p-2 rounded-full hover:bg-gray-100 transition"
+                title="Edit"
+              >
+                <Edit2 className="w-4 h-4 text-gray-600 hover:text-blue-600" />
+              </button>
+              <button
+                onClick={() => console.log(`Delete expense ${expense.id}`)}
+                className="bg-gray-100 p-2 rounded-full hover:bg-gray-100 transition"
+                title="Delete"
+              >
+                <Trash2 className="w-4 h-4 text-gray-600 hover:text-red-600" />
+              </button>
+            </div>
+
+            {/* Header: Title + Amount */}
+            <div className="flex justify-between items-start gap-2">
+              <div className="flex items-start gap-3 flex-1">
+                <div className="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
+                  {getCategoryIcon(
+                    expense.category.name as keyof typeof CategoryIcon
+                  )}
+                </div>
+                <div className="flex-1">
+                  <h3
+                    className="text-base font-semibold text-gray-800 truncate max-w-[150px] sm:max-w-[180px]"
+                    title={expense.title}
+                  >
+                    {expense.title}
+                  </h3>
+                  <div className="mt-1">
                     <DisplayDate date={expense.date} />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                      <Badge variant="secondary" className="text-sm px-3 py-1">
-                        {getCategoryIcon(
-                          expense.category.name as keyof typeof CategoryIcon
-                        )}
-                        <span className="ml-2">{expense.category?.name}</span>
-                      </Badge>
-                    </div>
-                    <p className="text-3xl font-extrabold text-primary">
-                      ₹{expense.amount.toFixed(2)}
-                    </p>
                   </div>
                 </div>
               </div>
-            </CardContent>
-          </Card>
-        ))}
+              <p className="text-lg font-semibold text-blue-600 whitespace-nowrap">
+                ₹{expense.amount.toFixed(2)}
+              </p>
+            </div>
+
+            {/* Category Badge */}
+            <div>
+              <span
+                className={`inline-flex items-center gap-1 px-3 py-1 text-xs rounded-full font-medium ${getCategoryColor(
+                  expense.category.name
+                )}`}
+              >
+                {getCategoryIcon(
+                  expense.category.name as keyof typeof CategoryIcon
+                )}
+                <span
+                  className="truncate max-w-[100px]"
+                  title={expense.category.name}
+                >
+                  {expense.category.name}
+                </span>
+              </span>
+            </div>
+          </div>
+        ))
+      ) : (
+        <p className="text-center text-gray-400 py-8 col-span-full">
+          No expenses found.
+        </p>
+      )}
     </div>
   );
 }

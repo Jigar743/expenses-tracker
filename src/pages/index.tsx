@@ -21,21 +21,14 @@ export default function Home({
   const [isAllCategorySelected, setIsAllCategorySelected] = useState(false);
   const [filters, setFilters] = useState<Array<number>>([]);
 
-  const retryClick = () => {
-    window.location.reload();
-  };
+  const retryClick = () => window.location.reload();
 
   const addFilterValue = (value: number) => {
-    const prevFilters = [...filters];
-
-    if (prevFilters.some((val) => val === value)) {
-      const index = prevFilters.findIndex((val) => val === value);
-      prevFilters.splice(index, 1);
-      setFilters(prevFilters);
-    } else {
-      prevFilters.push(value);
-      setFilters(prevFilters);
-    }
+    setFilters((prev) =>
+      prev.includes(value)
+        ? prev.filter((val) => val !== value)
+        : [...prev, value]
+    );
   };
 
   const applyFilters = () => {};
@@ -46,9 +39,11 @@ export default function Home({
 
   if (isError) {
     return (
-      <div className="flex items-center">
-        <p>Something went wrong</p>
-        <Button onClick={retryClick} variant="secondary">
+      <div className="flex flex-col items-center justify-center h-screen gap-4">
+        <p className="text-lg font-semibold text-red-600">
+          Something went wrong
+        </p>
+        <Button onClick={retryClick} variant="default">
           Retry
         </Button>
       </div>
@@ -60,62 +55,75 @@ export default function Home({
       <Head>
         <title>Expenses Tracker | Home</title>
       </Head>
-      <div className="h-[85vh] m-auto flex flex-col gap-4 sm:w-[100%] md:w-[100%] lg:w-[80%]">
-        <div className="mt-2 p-2 rounded border">
-          <div className="flex gap-2 justify-end">
-            <div
+      <div className="max-w-5xl mx-auto p-4 flex flex-col gap-6 min-h-[85vh]">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center bg-white border rounded-lg p-3 sm:p-4 shadow-md gap-3">
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-800 text-center sm:text-left">
+            Expense Tracker
+          </h1>
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
+            <Button
+              variant="outline"
+              className="flex items-center justify-center gap-2 w-full sm:w-auto"
               onClick={() => setOpenFilters(!openFilters)}
-              className="p-2 border rounded cursor-pointer"
             >
-              <FilterIcon />
-            </div>
+              <FilterIcon className="w-4 h-4" /> Filters
+            </Button>
             <AddExpenseModal categoryList={categoryList} />
           </div>
-          {openFilters && (
-            <div>
-              <div className="py-2 flex gap-2 flex-wrap">
+        </div>
+
+        {openFilters && (
+          <div className="bg-white border rounded-lg p-3 sm:p-4 shadow-sm">
+            <h2 className="text-base sm:text-lg font-semibold mb-3">
+              Filter by Category
+            </h2>
+            <div className="flex gap-2 flex-wrap mb-4">
+              <span
+                onClick={() => {
+                  setIsAllCategorySelected(!isAllCategorySelected);
+                  setFilters([]);
+                }}
+                className={`cursor-pointer px-3 py-2 border rounded-md text-sm ${
+                  isAllCategorySelected
+                    ? "bg-blue-600 text-white"
+                    : "hover:bg-gray-100"
+                }`}
+              >
+                All
+              </span>
+              {categoryList.map((category) => (
                 <span
+                  key={category.id}
                   onClick={() => {
-                    setIsAllCategorySelected(!isAllCategorySelected);
-                    setFilters([]);
+                    setIsAllCategorySelected(false);
+                    addFilterValue(category.id);
                   }}
-                  className={`cursor-pointer px-4 py-2 border rounded ${
-                    isAllCategorySelected ? "text-white bg-black" : ""
+                  className={`cursor-pointer px-3 py-2 border rounded-md text-sm ${
+                    filters.includes(category.id)
+                      ? "bg-blue-600 text-white"
+                      : "hover:bg-gray-100"
                   }`}
                 >
-                  All
+                  {category.name}
                 </span>
-                {categoryList.map((category) => (
-                  <span
-                    className={`cursor-pointer px-4 py-2 border rounded ${
-                      filters.some((val) => val === category.id)
-                        ? "text-white bg-black"
-                        : ""
-                    }`}
-                    key={category.id}
-                    onClick={() => {
-                      setIsAllCategorySelected(false);
-                      addFilterValue(category.id);
-                    }}
-                  >
-                    {category.name}
-                  </span>
-                ))}
-              </div>
-              <Button
-                onClick={applyFilters}
-                disabled={filters.length === 0 && !isAllCategorySelected}
-              >
-                Apply
-              </Button>
+              ))}
             </div>
-          )}
-        </div>
-        <div className="p-2 overflow-auto scroll-m-0 border rounded">
+            <Button
+              onClick={applyFilters}
+              disabled={filters.length === 0 && !isAllCategorySelected}
+              className="w-full sm:w-auto"
+            >
+              Apply Filters
+            </Button>
+          </div>
+        )}
+
+        <div className="bg-white border rounded-lg p-3 sm:p-4 shadow-sm sm:w-full">
           <ExpensesList expensesList={expensesList} />
         </div>
-        <div className="mb-2 font-semibold bg-blue-400 p-4 text-white rounded text-2xl flex flex-row justify-between">
-          <span>Total Expense: </span>
+
+        <div className="bg-blue-600 text-white rounded-lg p-3 sm:p-4 text-lg sm:text-xl font-semibold flex justify-between items-center shadow-md">
+          <span>Total:</span>
           <span>₹{TotalSum}</span>
         </div>
       </div>
@@ -132,9 +140,7 @@ export async function getServerSideProps({ req }: { req: NextRequest }) {
 
   try {
     const response = await fetch(apiConstants.getCategories, {
-      headers: {
-        Authorization: token,
-      },
+      headers: { Authorization: token },
     });
     const data = await response.json();
     categoryList = data.categories;
@@ -145,9 +151,7 @@ export async function getServerSideProps({ req }: { req: NextRequest }) {
 
   try {
     const response = await fetch(apiConstants.getExpenses, {
-      headers: {
-        Authorization: token,
-      },
+      headers: { Authorization: token },
     });
     const data = await response.json();
     expensesList = data.expenses;
@@ -156,15 +160,13 @@ export async function getServerSideProps({ req }: { req: NextRequest }) {
     isError = true;
   }
 
-  const serverProps = JSON.parse(
-    JSON.stringify({
-      categoryList,
-      expensesList,
-      isError,
-    })
-  );
-
   return {
-    props: serverProps,
+    props: JSON.parse(
+      JSON.stringify({
+        categoryList,
+        expensesList,
+        isError,
+      })
+    ),
   };
 }

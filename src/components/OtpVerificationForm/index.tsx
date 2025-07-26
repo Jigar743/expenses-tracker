@@ -13,43 +13,39 @@ export default function OtpVerificationForm() {
   const { user } = useAuth();
   const router = useRouter();
 
+  // Generate OTP when component mounts
   useEffect(() => {
     (async () => {
       try {
         const token = Cookies.get("token");
         await fetch(apiConstants.userGenerateOtp, {
           method: "POST",
-          headers: new Headers({
+          headers: {
             "Content-Type": "application/json",
             Authorization: token || "",
-          }),
-          body: JSON.stringify({
-            email: user?.email,
-          }),
+          },
+          body: JSON.stringify({ email: user?.email }),
         });
       } catch (error) {
         console.log(error);
       }
     })();
+
     document.getElementById("otp-0")?.focus();
-  }, []);
+  }, [user?.email]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     index: number
   ) => {
     const { value } = e.target;
-    if (/^[0-9]?/.test(value)) {
+    if (/^[0-9]?$/.test(value)) {
       const newOtp = [...otp];
       newOtp[index] = value;
       setOtp(newOtp);
 
       if (value && index < otp.length - 1) {
         document.getElementById(`otp-${index + 1}`)?.focus();
-      }
-
-      if (value && index === otp.length - 1) {
-        document.getElementById(`otp-${index}`)?.blur();
       }
     }
   };
@@ -61,10 +57,10 @@ export default function OtpVerificationForm() {
       const token = Cookies.get("token");
       const response = await fetch(apiConstants.userOtpVerification, {
         method: "POST",
-        headers: new Headers({
+        headers: {
           "Content-Type": "application/json",
           Authorization: token || "",
-        }),
+        },
         body: JSON.stringify({
           email: user?.email,
           otp: otpValue,
@@ -81,15 +77,18 @@ export default function OtpVerificationForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-4 h-[80%] m-auto border p-4 rounded shadow-lg sm:w-[100%] md:w-[70%] lg:w-[50%]"
+      className="max-w-lg w-full mx-auto bg-white rounded-md p-6 space-y-6 shadow"
     >
-      <div className="p-4 border-b-2">
-        <h1 className="text-center text-4xl">OTP Verification Form</h1>
+      {/* Header */}
+      <div className="text-center mb-4">
+        <h1 className="text-3xl font-semibold text-gray-800">Verify OTP</h1>
+        <p className="text-gray-500 text-sm">
+          Enter the 6-digit code sent to your email
+        </p>
       </div>
-      <FormItem className="flex gap-3 items-center">
-        <Label className="w-[30%] text-xl text-end" htmlFor="otp">
-          Enter OTP:
-        </Label>
+
+      {/* OTP Inputs */}
+      <div className="flex justify-center gap-3">
         {otp.map((_, index) => (
           <Input
             key={index}
@@ -98,12 +97,18 @@ export default function OtpVerificationForm() {
             value={otp[index]}
             maxLength={1}
             onChange={(e) => handleChange(e, index)}
-            className="text-center text-xl font-semibold w-12 h-12 p-0"
+            className="w-12 h-12 text-center text-lg font-semibold border border-gray-300 rounded-md bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         ))}
-      </FormItem>
-      <Button className="w-[100%] text-2xl py-6 text-center" type="submit">
-        Submit
+      </div>
+
+      {/* Submit Button */}
+      <Button
+        type="submit"
+        size="lg"
+        className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-md text-lg"
+      >
+        Verify OTP
       </Button>
     </form>
   );

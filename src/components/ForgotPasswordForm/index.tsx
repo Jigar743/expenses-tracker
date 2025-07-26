@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { FormItem } from "../ui/form";
-import { Label } from "../ui/label";
 import { Input } from "../ui/input";
-import Link from "next/link";
 import { Button } from "../ui/button";
+import { Mail } from "lucide-react";
+import Link from "next/link";
 
 export default function ForgotPasswordForm() {
   const [email, setEmail] = useState<string>("");
@@ -14,36 +13,55 @@ export default function ForgotPasswordForm() {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="space-y-4 h-[80%] m-auto border p-4 rounded shadow-lg sm:w-[100%] md:w-[70%] lg:w-[50%]"
-    >
-      <div className="p-4 border-b-2">
-        <h1 className="text-center text-4xl">Forgot Password Form</h1>
-      </div>
-      <FormItem className="flex  gap-3 items-center">
-        <Label className="w-[30%] text-xl text-end" htmlFor="email">
-          Enter Email:
-        </Label>
-        <Input
-          className="w-[70%] text-xl py-6"
-          id="email"
-          placeholder="Enter your email"
-          type="email"
-          name="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-      </FormItem>
-      <div className="w-[100%]">
+    <div className="flex justify-center items-center min-h-[calc(100vh-8rem)] bg-gradient-to-br from-blue-50 to-white px-4">
+      <form
+        onSubmit={handleSubmit}
+        className="w-full max-w-lg bg-white rounded-xl shadow-xl p-8 space-y-6 border border-gray-200"
+      >
+        {/* Title */}
+        <div className="text-center">
+          <h1 className="text-4xl font-bold text-blue-600">Forgot Password?</h1>
+          <p className="text-gray-500 mt-2">
+            Enter your email address to receive a reset link
+          </p>
+        </div>
+
+        {/* Email Input */}
+        <div className="space-y-2">
+          <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+            Email Address
+          </label>
+          <div className="relative">
+            <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="you@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="h-12 pl-10 border-gray-300 focus:border-gray-400 focus:ring-0 outline-none shadow-sm"
+            />
+          </div>
+        </div>
+
+        {/* Submit Button */}
         <Button
-          className="w-[100%] text-2xl py-6 text-center"
-          size={"lg"}
           type="submit"
+          size="lg"
+          className="w-full h-12 text-lg bg-blue-600 hover:bg-blue-700 text-white transition-all shadow-md"
         >
           Send Reset Link
         </Button>
-      </div>
-    </form>
+
+        {/* Back to Login */}
+        <p className="text-center text-sm text-gray-600">
+          Remember your password?{" "}
+          <Link href="/auth/login" className="text-blue-600 hover:underline font-semibold">
+            Log In
+          </Link>
+        </p>
+      </form>
+    </div>
   );
 }
